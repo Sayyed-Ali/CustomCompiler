@@ -6,6 +6,7 @@ converst source code text into tokens
 from dataclasses import dataclass
 from typing import List, Optional
 from enum import Enum, auto
+from spell_checker import SpellChecker
 
 class TokenType(Enum):
     "all possible token types"
@@ -84,6 +85,7 @@ class Lexer:
         self.pos = 0
         self.line = 1
         self.column = 1
+        self.spell_checker = SpellChecker()
         self.tokens: List[Token] = []
         self.errors: List[dict] = []
 
@@ -214,26 +216,30 @@ class Lexer:
         return Token(TokenType.STRING, string_value, start_line, start_col)
     
 
-    def read_identifier(self)->Token:
-        "read an identifer or keyword"
-        start_line = self.line
+    def read_identifier(self) -> Token:
+        """Read identifier or keyword - checks spelling"""
+        id_str = ''
         start_col = self.column
-        identifier = ''
-
-        # first char is letter or underscore
-        # following char can be letters, digits or underscores
-        while self.current_char() and (self.current_char().isalnum() or self.current_char()=='_'):
-            identifier += self.current_char()
+        start_line = self.line
+        
+        while self.current_char() and (self.current_char().isalnum() or self.current_char() == '_'):
+            id_str += self.current_char()
             self.advance()
-
-        # check if it is a keyword
-        token_type = self.keywords.get(identifier, TokenType.IDENTIFIER)
-
-        # for keywords, value is the keyword itself
-        # for identifiers, value is the name
-        value = identifier
-
-        return Token(token_type, value, start_line, start_col)
+        
+        # Check if keyword
+        token_type = self.keywords.get(id_str, TokenType.IDENTIFIER)
+        
+        # Create token
+        token = Token(token_type, id_str, start_line, start_col)
+        
+        # ✅ CHECK SPELLING FOR EVERYTHING
+        suggestion = self.spell_checker.check_keyword(id_str)
+        if suggestion:
+            token.spell_warning = suggestion
+            token.spell_warning['line'] = start_line
+            print(f"⚠️  Line {start_line}: '{id_str}' → '{suggestion['suggestion']}'?")
+        
+        return token
     
 
     def tokenize(self)->List[Token]:
