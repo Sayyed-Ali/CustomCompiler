@@ -1,123 +1,148 @@
 """
 AST Node Definitions
-Dedfines all nodes types for our abstract syntax tree
 """
 
-from dataclasses import dataclass, field
 from typing import Optional, List, Any
 
-@dataclass
+
 class ASTNode:
     """Base class for all AST nodes"""
-    line: int = 0
-    column: int  = 0
+    def __init__(self, line=0, column=0):
+        self.line = line
+        self.column = column
 
-@dataclass
+
 class Program(ASTNode):
-    """Root node - containsn list of statements"""
-    statements: List[ASTNode] = field(default_factory=list)
+    """Root node - contains list of statements"""
+    def __init__(self, statements=None, line=0, column=0):
+        super().__init__(line, column)
+        self.statements = statements if statements is not None else []
 
-@dataclass
+
 class Assignment(ASTNode):
-    """Cariable assigemnt: x=expression"""
-    variable: str = ""
-    expression: Optional[ASTNode] = None
+    """Variable assignment"""
+    def __init__(self, variable="", expression=None, line=0, column=0):
+        super().__init__(line, column)
+        self.variable = variable
+        self.expression = expression
 
-@dataclass
+
 class BinaryOp(ASTNode):
-    """Binary operation: left op right"""
-    operator: str = ""
-    left: Optional[ASTNode] = None
-    right: Optional[ASTNode] = None
+    """Binary operation"""
+    def __init__(self, operator="", left=None, right=None, line=0, column=0):
+        super().__init__(line, column)
+        self.operator = operator
+        self.left = left
+        self.right = right
 
-@dataclass
+
 class UnaryOp(ASTNode):
-    """Unary operations: op operand"""
-    operator: str = ""
-    operand: Optional[ASTNode] = None
+    """Unary operation"""
+    def __init__(self, operator="", operand=None, line=0, column=0):
+        super().__init__(line, column)
+        self.operator = operator
+        self.operand = operand
 
-@dataclass
+
 class Literal(ASTNode):
-    """literal value: 5, 3.14, "hello", true"""
-    value: Any = None
-    literal_type: str = ""      # 'int', 'float', 'string', 'bool'
+    """Literal value"""
+    def __init__(self, value=None, literal_type="", line=0, column=0):
+        super().__init__(line, column)
+        self.value = value
+        self.literal_type = literal_type
 
-@dataclass
+
 class Variable(ASTNode):
-    """Variable references: x"""
-    name: str = ""
+    """Variable reference"""
+    def __init__(self, name="", line=0, column=0):
+        super().__init__(line, column)
+        self.name = name
 
-@dataclass
+
 class IfStatement(ASTNode):
-    """"If-else statement"""
-    condition: Optional[ASTNode] = None
-    then_block: List[ASTNode] = field(default_factory=list)
-    else_block: Optional[List[ASTNode]] = None
+    """If-else statement"""
+    def __init__(self, condition=None, then_block=None, else_block=None, line=0, column=0):
+        super().__init__(line, column)
+        self.condition = condition
+        self.then_block = then_block if then_block is not None else []
+        self.else_block = else_block
 
-@dataclass
+
 class WhileStatement(ASTNode):
-    """while loop"""
-    condition: Optional[ASTNode] = None
-    body: List[ASTNode] = field(default_factory=list)
+    """While loop"""
+    def __init__(self, condition=None, body=None, line=0, column=0):
+        super().__init__(line, column)
+        self.condition = condition
+        self.body = body if body is not None else []
 
-@dataclass
+
 class PrintStatement(ASTNode):
-    """print statement"""
-    expression: Optional[ASTNode] = None
+    """Print statement"""
+    def __init__(self, expression=None, line=0, column=0):
+        super().__init__(line, column)
+        self.expression = expression
 
 
-def print_ast(node: ASTNode, indent: int=0)->None:
-    """print ast for debigginh"""
-
-    prefix=" "*indent
+def print_ast(node, indent=0):
+    """Print AST for debugging"""
+    prefix = " " * indent
     
     if isinstance(node, Program):
         print(f'{prefix}Program:')
         for stmt in node.statements:
-            print_ast(stmt, indent+1)
+            print_ast(stmt, indent + 2)
     
     elif isinstance(node, Assignment):
-        print(f'{prefix}Assignemnt: {node.variable}=')
-        print_ast(node.expression, indent+1)
-
+        print(f'{prefix}Assignment: {node.variable} =')
+        if node.expression:
+            print_ast(node.expression, indent + 2)
+    
     elif isinstance(node, BinaryOp):
         print(f'{prefix}BinaryOp: {node.operator}')
-        print_ast(node.left, indent+1)
-        print_ast(node.right, indent+1)
-
+        if node.left:
+            print_ast(node.left, indent + 2)
+        if node.right:
+            print_ast(node.right, indent + 2)
+    
     elif isinstance(node, UnaryOp):
         print(f'{prefix}UnaryOp: {node.operator}')
-        print_ast(node.operand, indent+1)
-
+        if node.operand:
+            print_ast(node.operand, indent + 2)
+    
     elif isinstance(node, Literal):
         print(f'{prefix}Literal: {node.value} ({node.literal_type})')
-
+    
     elif isinstance(node, Variable):
-        print(f"{prefix}Variable: {node.name}")
-
+        print(f'{prefix}Variable: {node.name}')
+    
     elif isinstance(node, IfStatement):
         print(f'{prefix}If:')
-        print(f'{prefix}Condition:')
-        print_ast(node.condition, indent+2)
-        print(f'{prefix}then:')
-        for stmt in node.then_block:
-            print_ast(stmt, indent+2)
+        if node.condition:
+            print(f'{prefix}  Condition:')
+            print_ast(node.condition, indent + 4)
+        if node.then_block:
+            print(f'{prefix}  Then:')
+            for stmt in node.then_block:
+                print_ast(stmt, indent + 4)
         if node.else_block:
-            print(f'{prefix} else:')
+            print(f'{prefix}  Else:')
             for stmt in node.else_block:
-                print_ast(stmt, indent+2)
+                print_ast(stmt, indent + 4)
     
     elif isinstance(node, WhileStatement):
         print(f'{prefix}While:')
-        print(f'{prefix}Condition:')
-        print_ast(node.condition, indent+2)
-        print(f'{prefix}Body:')
-        for stmt in node.body:
-            print_ast(stmt, indent+2)
-        
-    elif isinstance(node, PrintStatement):
-        print(f'{prefix}print:')
-        print_ast(node.expression, indent+1)
+        if node.condition:
+            print(f'{prefix}  Condition:')
+            print_ast(node.condition, indent + 4)
+        if node.body:
+            print(f'{prefix}  Body:')
+            for stmt in node.body:
+                print_ast(stmt, indent + 4)
     
-
-
+    elif isinstance(node, PrintStatement):
+        print(f'{prefix}Print:')
+        if node.expression:
+            print_ast(node.expression, indent + 2)
+    
+    else:
+        print(f'{prefix}{node.__class__.__name__}')
