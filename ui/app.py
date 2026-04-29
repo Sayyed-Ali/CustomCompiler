@@ -1,6 +1,5 @@
 """
-Smart Compiler - Web Interface
-COMPLETE FIXED VERSION - Better errors, spell checking, AST tree
+UI- Smart Compiler
 """
 
 import streamlit as st
@@ -8,7 +7,7 @@ import sys
 import os
 from pathlib import Path
 
-# Add src to path
+# Setup path
 current_dir = Path(__file__).parent
 src_dir = current_dir.parent / 'src'
 sys.path.insert(0, str(src_dir))
@@ -20,11 +19,7 @@ from codegen import CodeGenerator
 from ast_visualizer import visualize_ast
 
 # Page config
-st.set_page_config(
-    page_title="Smart Compiler",
-    page_icon="🔧",
-    layout="wide"
-)
+st.set_page_config(page_title="Smart Compiler", page_icon="🔧", layout="wide")
 
 # CSS
 st.markdown("""
@@ -36,19 +31,26 @@ st.markdown("""
     padding: 1rem;
     font-weight: bold;
 }
-.success-msg {
+.success-box {
     background: #d4edda;
-    border-left: 4px solid #28a745;
+    border: 1px solid #c3e6cb;
     padding: 1rem;
-    margin: 1rem 0;
     border-radius: 5px;
+    margin: 1rem 0;
 }
-.error-msg {
+.error-box {
     background: #f8d7da;
-    border-left: 4px solid #dc3545;
+    border: 1px solid #f5c6cb;
     padding: 1rem;
-    margin: 1rem 0;
     border-radius: 5px;
+    margin: 1rem 0;
+}
+.warning-box {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
 }
 .code-block {
     background: #1e1e1e;
@@ -64,14 +66,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Session state
+# Session
 if 'compiled' not in st.session_state:
     st.session_state.compiled = False
 if 'code' not in st.session_state:
-    st.session_state.code = """x = 5
-y = 10
-z = x + y
-print(z)"""
+    st.session_state.code = "x = 5\ny = 10\nz = x + y\nprint(z)"
 
 # Header
 st.markdown('<div class="main-header">🔧 Smart Compiler</div>', unsafe_allow_html=True)
@@ -81,57 +80,42 @@ with st.sidebar:
     st.markdown("### 📚 Examples")
     
     examples = {
-        "✅ Basic (Correct)": "x = 5\ny = 10\nz = x + y\nprint(z)",
-        "❌ Wrong Spelling": "x = 5\nwhiel (x < 10) {\n    x = x + 1\n    printt(x)\n}",
-        "❌ Syntax Error": "x = 5\ny = 10\nz = x + y\nprintt(z)",
-        "✅ If-Else": 'x = 15\nif (x > 10) {\n    print(x)\n} else {\n    print(0)\n}',
-        "✅ While Loop": "count = 0\nwhile (count < 3) {\n    count = count + 1\n    print(count)\n}",
-        "✅ Type Inference": "x = 5\ny = 3.14\nz = x + y\nprint(z)",
-        "✅ Complete Program": 'x = 5\ny = 3.14\nz = x + y\n\nif (z > 5.0) {\n    print(z)\n}\n\ncount = 0\nwhile (count < 3) {\n    count = count + 1\n    print(count)\n}'
+        "✅ Correct Code": "x = 5\ny = 10\nz = x + y\nprint(z)",
+        "❌ Typo: printt": "x = 5\ny = 10\nz = x + y\nprintt(z)",
+        "❌ Typo: whiel": "x = 5\nwhiel (x < 10) {\n    x = x + 1\n    print(x)\n}",
+        "✅ If-Else": "x = 15\nif (x > 10) {\n    print(x)\n} else {\n    print(0)\n}",
+        "✅ Type Inference": "x = 5\ny = 3.14\nz = x + y\nprint(z)"
     }
     
-    ex_choice = st.selectbox("Choose Example:", list(examples.keys()))
-    if st.button("📥 Load Example"):
-        st.session_state.code = examples[ex_choice]
+    choice = st.selectbox("Choose:", list(examples.keys()))
+    if st.button("📥 Load"):
+        st.session_state.code = examples[choice]
         st.session_state.compiled = False
         st.rerun()
     
     st.markdown("---")
-    st.markdown("### ℹ️ ML Features")
-    st.success("🤖 Spell Checking")
-    st.success("🧠 Type Inference")
+    st.markdown("### 🤖 ML Features")
+    st.success("✓ Spell Checking")
+    st.success("✓ Type Inference")
     
     st.markdown("---")
-    st.markdown("**Team Code Sages**")
+    st.caption("**Team Code Sages**")
     st.caption("CD-VI-T079-2026")
 
-# Main area
+# Main
 col1, col2 = st.columns([1, 1])
 
 with col1:
     st.markdown("### 📝 Source Code")
-    code_input = st.text_area(
-        "",
-        value=st.session_state.code,
-        height=300,
-        key="editor",
-        help="Write your code here"
-    )
+    code_input = st.text_area("", value=st.session_state.code, height=300, key="editor")
     st.session_state.code = code_input
     
-    col_btn1, col_btn2 = st.columns([1, 1])
-    with col_btn1:
-        if st.button("🚀 Compile", type="primary", use_container_width=True):
-            st.session_state.compiled = True
-            st.rerun()
-    with col_btn2:
-        if st.button("🗑️ Clear", use_container_width=True):
-            st.session_state.code = ""
-            st.session_state.compiled = False
-            st.rerun()
+    if st.button("🚀 Compile", type="primary", use_container_width=True):
+        st.session_state.compiled = True
+        st.rerun()
 
 with col2:
-    st.markdown("### 📊 Quick Stats")
+    st.markdown("### 📊 Status")
     
     if st.session_state.compiled and code_input.strip():
         try:
@@ -139,85 +123,80 @@ with col2:
             lexer = Lexer(code_input)
             tokens = lexer.tokenize()
             
-            # Check for lexer errors
-            if lexer.errors:
-                st.markdown('<div class="error-msg"><b>❌ Lexical Errors</b></div>', unsafe_allow_html=True)
-                for err in lexer.errors:
-                    st.error(f"Line {err['line']}: {err['message']}")
-                st.session_state.result = {'success': False}
+            # Check for spell errors
+            spell_errors = []
+            for token in tokens:
+                if hasattr(token, 'spell_warning') and token.spell_warning:
+                    spell_errors.append(token.spell_warning)
+            
+            # If spell errors, stop here
+            if spell_errors:
+                st.markdown('<div class="warning-box"><b>🤖 ML Spell Checker Detected Typos!</b></div>', unsafe_allow_html=True)
+                
+                for err in spell_errors:
+                    st.error(
+                        f"**Line {err.get('line', '?')}:** "
+                        f"Unknown identifier `{err['original']}`\n\n"
+                        f"💡 **Did you mean `{err['suggestion']}`?**\n\n"
+                        f"Confidence: {err['confidence']}%"
+                    )
+                
+                st.warning("⚠️ Fix spelling errors to continue")
+                st.session_state.result = None
+            
             else:
                 # Phase 2: Parser
                 parser = Parser(tokens)
                 ast = parser.parse()
                 
                 if not ast or parser.errors:
-                    st.markdown('<div class="error-msg"><b>❌ Syntax Errors</b></div>', unsafe_allow_html=True)
-                    
-                    # Show better error messages
-                    if parser.errors:
-                        for err in parser.errors:
-                            # Make error message clearer
-                            msg = err.get('message', 'Unknown error')
-                            line = err.get('line', '?')
-                            
-                            # Simplify confusing messages
-                            if 'Expected ASSIGN but got' in msg:
-                                msg = f"Missing '=' assignment operator"
-                            elif 'LPAREN' in msg or 'RPAREN' in msg:
-                                msg = f"Missing parenthesis '(' or ')'"
-                            elif 'LBRACE' in msg or 'RBRACE' in msg:
-                                msg = f"Missing curly brace '{{' or '}}'"
-                            
-                            st.error(f"**Line {line}:** {msg}")
-                    
-                    st.session_state.result = {'success': False}
+                    st.markdown('<div class="error-box"><b>❌ Syntax Errors</b></div>', unsafe_allow_html=True)
+                    for err in parser.errors:
+                        st.error(f"Line {err.get('line', '?')}: {err.get('message')}")
+                    st.session_state.result = None
+                
                 else:
                     # Phase 3: Semantic
                     analyzer = SemanticAnalyzer()
                     success = analyzer.analyze(ast)
                     
                     if not success:
-                        st.markdown('<div class="error-msg"><b>❌ Semantic Errors</b></div>', unsafe_allow_html=True)
+                        st.markdown('<div class="error-box"><b>❌ Semantic Errors</b></div>', unsafe_allow_html=True)
                         for err in analyzer.errors:
-                            st.error(f"Line {err.get('line', '?')}: {err.get('message', 'Unknown error')}")
-                        st.session_state.result = {'success': False}
+                            st.error(f"Line {err.get('line', '?')}: {err.get('message')}")
+                        st.session_state.result = None
+                    
                     else:
-                        # Phase 4: Code Generation
+                        # Phase 4: CodeGen
                         codegen = CodeGenerator()
-                        tac = codegen.generate(ast)
+                        codegen.generate(ast)
                         
-                        st.markdown('<div class="success-msg"><b>✅ Compilation Successful!</b></div>', unsafe_allow_html=True)
+                        st.markdown('<div class="success-box"><b>✅ Compilation Successful!</b></div>', unsafe_allow_html=True)
                         
-                        # Stats
                         c1, c2, c3 = st.columns(3)
                         c1.metric("Tokens", len(tokens))
                         c2.metric("Variables", len(analyzer.symbol_table.symbols))
-                        c3.metric("TAC Lines", len(tac))
+                        c3.metric("TAC Lines", len(codegen.instructions))
                         
-                        # Save results
+                        # SAVE RESULTS
                         st.session_state.result = {
                             'tokens': tokens,
                             'ast': ast,
                             'analyzer': analyzer,
-                            'codegen': codegen,
-                            'success': True
+                            'codegen': codegen
                         }
         
         except Exception as e:
-            st.markdown('<div class="error-msg"><b>❌ Compilation Error</b></div>', unsafe_allow_html=True)
-            st.error(str(e))
-            
-            # Show detailed error for debugging
-            with st.expander("🔍 Debug Info"):
+            st.error(f"❌ Error: {str(e)}")
+            with st.expander("Debug Info"):
                 import traceback
                 st.code(traceback.format_exc())
-            
-            st.session_state.result = {'success': False}
+            st.session_state.result = None
     else:
         st.info("👆 Enter code and click Compile")
 
-# Results tabs
-if st.session_state.compiled and 'result' in st.session_state and st.session_state.result.get('success'):
+# Results - ONLY if result exists
+if st.session_state.compiled and st.session_state.get('result'):
     st.markdown("---")
     
     tab1, tab2, tab3, tab4 = st.tabs(["🔤 Tokens", "🌳 AST", "🧠 Semantic", "💻 TAC"])
@@ -225,117 +204,92 @@ if st.session_state.compiled and 'result' in st.session_state and st.session_sta
     with tab1:
         st.markdown("### Phase 1: Lexical Analysis")
         
-        # ✅ SPELL CHECKER - Check ALL tokens
-        spell_warnings = []
-        for token in st.session_state.result['tokens']:
-            if hasattr(token, 'spell_warning') and token.spell_warning:
-                spell_warnings.append(token.spell_warning)
-        
-        if spell_warnings:
-            st.markdown("#### 🤖 ML Feature #1: Spell Checker Detected Typos!")
-            
-            for warning in spell_warnings:
-                st.warning(
-                    f"**Possible typo on line {warning.get('line', '?')}:**\n\n"
-                    f"• You wrote: `{warning['original']}`\n\n"
-                    f"• Did you mean: `{warning['suggestion']}`?\n\n"
-                    f"• Confidence: **{warning['confidence']}%**\n\n"
-                    f"• Edit distance: {warning['distance']}"
-                )
-        else:
-            st.success("✅ No spelling errors detected!")
-        
-        st.markdown("---")
-        st.markdown("**Token Stream:**")
-        
-        # Token table
         token_data = []
-        for i, tok in enumerate(st.session_state.result['tokens'][:25], 1):
-            # Add warning indicator if spell issue
-            warning = "⚠️" if hasattr(tok, 'spell_warning') and tok.spell_warning else ""
-            
+        for i, tok in enumerate(st.session_state.result['tokens'][:20], 1):
             token_data.append({
                 "#": i,
                 "Type": tok.type.name,
                 "Value": str(tok.value),
-                "Line": tok.line,
-                "⚠️": warning
+                "Line": tok.line
             })
         
         st.dataframe(token_data, use_container_width=True, hide_index=True)
         
-        if len(st.session_state.result['tokens']) > 25:
-            st.caption(f"... and {len(st.session_state.result['tokens']) - 25} more tokens")
+        if len(st.session_state.result['tokens']) > 20:
+            st.caption(f"... and {len(st.session_state.result['tokens']) - 20} more tokens")
     
     with tab2:
         st.markdown("### Phase 2: Syntax Analysis")
         
-        # Show tree
-        tree_str = visualize_ast(st.session_state.result['ast'])
-        
-        st.markdown(f'<div class="code-block">{tree_str}</div>', unsafe_allow_html=True)
-        
-        st.info("💡 **Tree shows program structure:** Each node represents a language construct")
+        tree = visualize_ast(st.session_state.result['ast'])
+        st.markdown(f'<div class="code-block">{tree}</div>', unsafe_allow_html=True)
     
     with tab3:
         st.markdown("### Phase 3: Semantic Analysis")
         
         st.markdown("**Symbol Table:**")
         
-        sym_data = []
-        for name, sym in st.session_state.result['analyzer'].symbol_table.symbols.items():
-            sym_data.append({
-                "Variable": name,
-                "Type": sym.type,
-                "Declared at Line": sym.line
-            })
+        # Get symbols
+        symbols = st.session_state.result['analyzer'].symbol_table.symbols
         
-        if sym_data:
+        if symbols:
+            sym_data = []
+            for name, sym in symbols.items():
+                sym_data.append({
+                    "Variable": name,
+                    "Type": sym.type,
+                    "Line": sym.line
+                })
+            
             st.dataframe(sym_data, use_container_width=True, hide_index=True)
         else:
-            st.info("No variables declared yet")
+            st.info("No variables in this program")
         
         # Type promotions
-        if st.session_state.result['analyzer'].type_promotions:
+        promotions = st.session_state.result['analyzer'].type_promotions
+        
+        if promotions:
             st.markdown("---")
-            st.markdown("#### 🧠 ML Feature #2: Type Inference Active!")
-            st.info("**Automatic type promotions detected:**")
-            for p in st.session_state.result['analyzer'].type_promotions:
-                st.success(
-                    f"• **Line {p['line']}:** Variable `{p['variable']}` promoted\n\n"
-                    f"  From: `{p['from_type']}` → To: `{p['to_type']}`"
-                )
+            st.info("🧠 **ML Feature #2: Type Inference**")
+            for p in promotions:
+                st.success(f"Line {p['line']}: `{p['variable']}` promoted from `{p['from_type']}` to `{p['to_type']}`")
         else:
-            st.success("✅ No type promotions needed - all types match!")
+            st.success("✅ No type promotions needed")
     
     with tab4:
         st.markdown("### Phase 4: Code Generation")
         
-        st.markdown("**Three-Address Code (TAC):**")
+        st.markdown("**Three-Address Code:**")
         
-        # Vertical TAC display
-        tac_lines = []
-        for i, instr in enumerate(st.session_state.result['codegen'].instructions, 1):
-            tac_lines.append(f"{i:3d}:  {str(instr)}")
+        # Get instructions
+        instructions = st.session_state.result['codegen'].instructions
         
-        tac_output = "\n".join(tac_lines)
-        st.markdown(f'<div class="code-block">{tac_output}</div>', unsafe_allow_html=True)
-        
-        st.download_button(
-            "📥 Download TAC File",
-            data=tac_output,
-            file_name="output.tac",
-            mime="text/plain"
-        )
-        
-        # Stats
-        st.markdown("---")
-        st.markdown("**Code Generation Statistics:**")
-        col_a, col_b, col_c = st.columns(3)
-        col_a.metric("Instructions", len(st.session_state.result['codegen'].instructions))
-        col_b.metric("Temp Variables", st.session_state.result['codegen'].temp_counter)
-        col_c.metric("Labels", st.session_state.result['codegen'].label_counter)
+        if instructions:
+            # Build TAC display
+            tac_lines = []
+            for i, instr in enumerate(instructions, 1):
+                tac_lines.append(f"{i:3d}:  {str(instr)}")
+            
+            tac_output = "\n".join(tac_lines)
+            st.markdown(f'<div class="code-block">{tac_output}</div>', unsafe_allow_html=True)
+            
+            # Download
+            st.download_button(
+                "📥 Download TAC",
+                data=tac_output,
+                file_name="output.tac",
+                mime="text/plain"
+            )
+            
+            # Stats
+            st.markdown("---")
+            st.markdown("**Code Generation Stats:**")
+            col_a, col_b, col_c = st.columns(3)
+            col_a.metric("Instructions", len(instructions))
+            col_b.metric("Temp Variables", st.session_state.result['codegen'].temp_counter)
+            col_c.metric("Labels", st.session_state.result['codegen'].label_counter)
+        else:
+            st.warning("No TAC generated")
 
-# Footer
 st.markdown("---")
-st.caption("Smart Compiler • Team Code Sages • CD-VI-T079-2026 • Graphic Era University")
+st.caption("Smart Compiler • Team Code Sages • CD-VI-T079-2026")

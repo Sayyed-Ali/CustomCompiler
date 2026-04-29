@@ -1,18 +1,18 @@
 """
-AST Visualizer - Creates beautiful tree diagrams
+AST Visualizer - Creates tree structure
 """
 
 from ast_nodes import *
 
 def visualize_ast(ast):
     """
-    Create visual tree of AST with proper hierarchy
-    Returns string with tree structure
+    Create visual tree of AST
+    Returns HTML string with proper tree structure
     """
     lines = []
-    lines.append("🌳 Abstract Syntax Tree\n")
+    lines.append("Abstract Syntax Tree\n")
     
-    # Create tree structure
+    # Build tree
     tree_lines = build_tree(ast, "", True, True)
     lines.extend(tree_lines)
     
@@ -21,7 +21,7 @@ def visualize_ast(ast):
 
 def build_tree(node, prefix, is_last, is_root=False):
     """
-    Build tree structure recursively
+    Recursively build tree structure
     """
     lines = []
     
@@ -64,38 +64,38 @@ def get_node_display(node):
     """Get display text for node"""
     
     if isinstance(node, Program):
-        return "📦 Program"
+        return "[Program]"
     
     elif isinstance(node, Assignment):
-        return f"📌 Assignment: {node.variable} ="
+        return f"[Assignment] {node.variable} ="
     
     elif isinstance(node, Literal):
-        return f"📝 Literal: {node.value} ({node.literal_type})"
+        return f"[Literal] {node.value} ({node.literal_type})"
     
     elif isinstance(node, Variable):
-        return f"🔤 Variable: {node.name}"
+        return f"[Variable] {node.name}"
     
     elif isinstance(node, BinaryOp):
-        return f"⚙️  BinaryOp: {node.operator}"
+        return f"[BinaryOp] {node.operator}"
     
     elif isinstance(node, UnaryOp):
-        return f"➖ UnaryOp: {node.operator}"
+        return f"[UnaryOp] {node.operator}"
     
     elif isinstance(node, IfStatement):
-        return "🔀 IfStatement"
+        return "[IfStatement]"
     
     elif isinstance(node, WhileStatement):
-        return "🔁 WhileStatement"
+        return "[WhileStatement]"
     
     elif isinstance(node, PrintStatement):
-        return "🖨️  PrintStatement"
+        return "[PrintStatement]"
     
     else:
-        return node.__class__.__name__
+        return f"[{node.__class__.__name__}]"
 
 
 def get_children(node):
-    """Get child nodes for tree"""
+    """Get child nodes"""
     
     if isinstance(node, Program):
         return node.statements
