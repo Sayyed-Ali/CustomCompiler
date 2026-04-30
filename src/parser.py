@@ -24,7 +24,7 @@ class Parser:
         # Check if current token has spell warning
         if self.current_token and hasattr(self.current_token, 'spell_warning'):
             warning = self.current_token.spell_warning
-            # Show spell suggestion INSTEAD of confusing syntax error
+            # Show spell suggestion
             self.errors.append({
                 'type': 'SPELLING_ERROR',
                 'line': self.current_token.line,

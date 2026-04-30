@@ -1,7 +1,6 @@
 """
 Type Inference Engine
 Automatically deduces variable types from context
-This is ML Feature #2!
 """
 
 from typing import Optional, Dict, Tuple
@@ -25,7 +24,7 @@ class TypeInferenceEngine:
             ('bool', 'bool'): 'bool',
         }
         
-        # Operator result types
+        # Operator categories
         self.comparison_operators = {'==', '!=', '<', '<=', '>', '>='}
         self.logical_operators = {'&&', '||'}
         self.arithmetic_operators = {'+', '-', '*', '/', '%'}
@@ -40,7 +39,6 @@ class TypeInferenceEngine:
     def infer_binary_op_type(self, operator: str, left_type: str, right_type: str) -> Tuple[str, bool]:
         """
         Infer the result type of a binary operation
-        
         Returns: (result_type, needs_promotion)
         """
         # Comparison operators always return bool
@@ -151,7 +149,7 @@ class TypeInferenceEngine:
 if __name__ == "__main__":
     engine = TypeInferenceEngine()
     
-    print("🧪 Testing Type Inference Engine\n")
+    print(" Testing Type Inference Engine\n")
     print("=" * 50)
     
     # Test 1: Literal inference
@@ -179,4 +177,4 @@ if __name__ == "__main__":
         print(f"  {desc:<20} → {result}{promo_str}")
     
     print("\n" + "=" * 50)
-    print("✅ Type Inference Engine working!")
+    print(" Type Inference Engine working!")

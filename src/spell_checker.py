@@ -14,7 +14,7 @@ class SpellChecker:
             'if', 'else', 'while', 'for',
             'int', 'float', 'string', 'bool',
             'true', 'false',
-            'print',  # ← Important: 'print' is here
+            'print', 
             'return', 'break', 'continue'
         ]
     

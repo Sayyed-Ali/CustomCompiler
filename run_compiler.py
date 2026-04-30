@@ -59,7 +59,7 @@ while (count < 3) {
     if len(tokens) > 15:
         print(f"\n  ... and {len(tokens)-15} more tokens")
     
-    print("\n✅ PHASE 1 COMPLETE!")
+    print("\n PHASE 1 COMPLETE!")
     
     # PHASE 2: SYNTAX ANALYSIS
     print("\n" + "="*70)
@@ -70,7 +70,7 @@ while (count < 3) {
     ast = parser.parse()
     
     if not ast:
-        print("\n❌ PARSING FAILED!")
+        print("\n PARSING FAILED!")
         for error in parser.errors:
             print(f"  Error: {error['message']}")
         return False
@@ -79,7 +79,7 @@ while (count < 3) {
     print("AST Structure:")
     print_ast(ast, indent=2)
     
-    print("\n✅ PHASE 2 COMPLETE!")
+    print("\n PHASE 2 COMPLETE!")
     
     # PHASE 3: SEMANTIC ANALYSIS
     print("\n" + "="*70)
@@ -90,7 +90,7 @@ while (count < 3) {
     success = analyzer.analyze(ast)
     
     if not success:
-        print("\n❌ SEMANTIC ANALYSIS FAILED!")
+        print("\n SEMANTIC ANALYSIS FAILED!")
         print(analyzer.generate_report())
         return False
     
@@ -100,7 +100,7 @@ while (count < 3) {
     print("   Type inference automatically determined all variable types!")
     print("   No explicit type declarations needed!")
     
-    print("\n✅ PHASE 3 COMPLETE!")
+    print("\n PHASE 3 COMPLETE!")
     
     # PHASE 4: CODE GENERATION
     print("\n" + "="*70)
@@ -116,15 +116,15 @@ while (count < 3) {
     print(codegen.get_code())
     print("-"*70)
     
-    print("\n✅ PHASE 4 COMPLETE!")
+    print("\n PHASE 4 COMPLETE!")
     
     # FINAL SUMMARY
     print("\n" + "="*70)
-    print("🎉 COMPILATION SUCCESSFUL!")
+    print(" COMPILATION SUCCESSFUL!")
     print("="*70)
     
     print(f"""
-📊 COMPILATION STATISTICS:
+ COMPILATION STATISTICS:
    • Input Lines:        {len(code.split(chr(10)))}
    • Tokens Generated:   {len(tokens)}
    • AST Statements:     {len(ast.statements)}
@@ -134,7 +134,7 @@ while (count < 3) {
    • Labels Created:     {codegen.label_counter}
    • Errors Found:       {len(analyzer.errors)}
 
-🎯 ALL 4 PHASES EXECUTED SUCCESSFULLY!
+ ALL 4 PHASES EXECUTED SUCCESSFULLY!
 """)
     
     return True
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     success = run_compiler_demo()
     
     if success:
-        print("\n✅ Demo completed successfully!\n")
+        print("\n Demo completed successfully!\n")
     else:
-        print("\n❌ Demo failed with errors.\n")
+        print("\n Demo failed with errors.\n")
         sys.exit(1)

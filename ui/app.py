@@ -73,30 +73,30 @@ if 'code' not in st.session_state:
     st.session_state.code = "x = 5\ny = 10\nz = x + y\nprint(z)"
 
 # Header
-st.markdown('<div class="main-header">🔧 Smart Compiler</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header"> Smart Compiler</div>', unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### 📚 Examples")
+    st.markdown("###  Examples")
     
     examples = {
-        "✅ Correct Code": "x = 5\ny = 10\nz = x + y\nprint(z)",
-        "❌ Typo: printt": "x = 5\ny = 10\nz = x + y\nprintt(z)",
-        "❌ Typo: whiel": "x = 5\nwhiel (x < 10) {\n    x = x + 1\n    print(x)\n}",
-        "✅ If-Else": "x = 15\nif (x > 10) {\n    print(x)\n} else {\n    print(0)\n}",
-        "✅ Type Inference": "x = 5\ny = 3.14\nz = x + y\nprint(z)"
+        " Correct Code": "x = 5\ny = 10\nz = x + y\nprint(z)",
+        " Typo: printt": "x = 5\ny = 10\nz = x + y\nprintt(z)",
+        " Typo: whiel": "x = 5\nwhiel (x < 10) {\n    x = x + 1\n    print(x)\n}",
+        " If-Else": "x = 15\nif (x > 10) {\n    print(x)\n} else {\n    print(0)\n}",
+        " Type Inference": "x = 5\ny = 3.14\nz = x + y\nprint(z)"
     }
     
     choice = st.selectbox("Choose:", list(examples.keys()))
-    if st.button("📥 Load"):
+    if st.button(" Load"):
         st.session_state.code = examples[choice]
         st.session_state.compiled = False
         st.rerun()
     
     st.markdown("---")
-    st.markdown("### 🤖 ML Features")
-    st.success("✓ Spell Checking")
-    st.success("✓ Type Inference")
+    st.markdown("###  ML Features")
+    st.success(" Spell Checking")
+    st.success(" Type Inference")
     
     st.markdown("---")
     st.caption("**Team Code Sages**")
@@ -106,16 +106,16 @@ with st.sidebar:
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.markdown("### 📝 Source Code")
+    st.markdown("###  Source Code")
     code_input = st.text_area("", value=st.session_state.code, height=300, key="editor")
     st.session_state.code = code_input
     
-    if st.button("🚀 Compile", type="primary", use_container_width=True):
+    if st.button(" Compile", type="primary", use_container_width=True):
         st.session_state.compiled = True
         st.rerun()
 
 with col2:
-    st.markdown("### 📊 Status")
+    st.markdown("###  Status")
     
     if st.session_state.compiled and code_input.strip():
         try:
@@ -131,7 +131,7 @@ with col2:
             
             # If spell errors, stop here
             if spell_errors:
-                st.markdown('<div class="warning-box"><b>🤖 ML Spell Checker Detected Typos!</b></div>', unsafe_allow_html=True)
+                st.markdown('<div class="warning-box"><b> ML Spell Checker Detected Typos!</b></div>', unsafe_allow_html=True)
                 
                 for err in spell_errors:
                     st.error(
@@ -150,7 +150,7 @@ with col2:
                 ast = parser.parse()
                 
                 if not ast or parser.errors:
-                    st.markdown('<div class="error-box"><b>❌ Syntax Errors</b></div>', unsafe_allow_html=True)
+                    st.markdown('<div class="error-box"><b> Syntax Errors</b></div>', unsafe_allow_html=True)
                     for err in parser.errors:
                         st.error(f"Line {err.get('line', '?')}: {err.get('message')}")
                     st.session_state.result = None
@@ -161,7 +161,7 @@ with col2:
                     success = analyzer.analyze(ast)
                     
                     if not success:
-                        st.markdown('<div class="error-box"><b>❌ Semantic Errors</b></div>', unsafe_allow_html=True)
+                        st.markdown('<div class="error-box"><b> Semantic Errors</b></div>', unsafe_allow_html=True)
                         for err in analyzer.errors:
                             st.error(f"Line {err.get('line', '?')}: {err.get('message')}")
                         st.session_state.result = None
@@ -171,7 +171,7 @@ with col2:
                         codegen = CodeGenerator()
                         codegen.generate(ast)
                         
-                        st.markdown('<div class="success-box"><b>✅ Compilation Successful!</b></div>', unsafe_allow_html=True)
+                        st.markdown('<div class="success-box"><b> Compilation Successful!</b></div>', unsafe_allow_html=True)
                         
                         c1, c2, c3 = st.columns(3)
                         c1.metric("Tokens", len(tokens))
@@ -187,19 +187,19 @@ with col2:
                         }
         
         except Exception as e:
-            st.error(f"❌ Error: {str(e)}")
+            st.error(f" Error: {str(e)}")
             with st.expander("Debug Info"):
                 import traceback
                 st.code(traceback.format_exc())
             st.session_state.result = None
     else:
-        st.info("👆 Enter code and click Compile")
+        st.info(" Enter code and click Compile")
 
 # Results - ONLY if result exists
 if st.session_state.compiled and st.session_state.get('result'):
     st.markdown("---")
     
-    tab1, tab2, tab3, tab4 = st.tabs(["🔤 Tokens", "🌳 AST", "🧠 Semantic", "💻 TAC"])
+    tab1, tab2, tab3, tab4 = st.tabs([" Tokens", " AST", "Semantic", " TAC"])
     
     with tab1:
         st.markdown("### Phase 1: Lexical Analysis")
@@ -250,11 +250,11 @@ if st.session_state.compiled and st.session_state.get('result'):
         
         if promotions:
             st.markdown("---")
-            st.info("🧠 **ML Feature #2: Type Inference**")
+            st.info(" **ML Feature #2: Type Inference**")
             for p in promotions:
                 st.success(f"Line {p['line']}: `{p['variable']}` promoted from `{p['from_type']}` to `{p['to_type']}`")
         else:
-            st.success("✅ No type promotions needed")
+            st.success(" No type promotions needed")
     
     with tab4:
         st.markdown("### Phase 4: Code Generation")

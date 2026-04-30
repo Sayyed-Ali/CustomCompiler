@@ -22,7 +22,7 @@ class ErrorReporter:
             suggestion: Optional suggestion for fix
         """
         output = []
-        output.append(f"\n❌ {error_type} ERROR at line {line}, column {column}")
+        output.append(f"\n {error_type} ERROR at line {line}, column {column}")
         output.append("-" * 60)
         
         # Show the problematic line
@@ -37,7 +37,7 @@ class ErrorReporter:
         output.append(f"\nError: {message}")
         
         if suggestion:
-            output.append(f"💡 Suggestion: {suggestion}")
+            output.append(f" Suggestion: {suggestion}")
         
         output.append("-" * 60)
         

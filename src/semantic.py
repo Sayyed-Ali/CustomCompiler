@@ -186,7 +186,7 @@ class SemanticAnalyzer:
         lines = []
         
         lines.append("\n" + "="*60)
-        lines.append("📊 SEMANTIC ANALYSIS REPORT")
+        lines.append(" SEMANTIC ANALYSIS REPORT")
         lines.append("="*60)
         
         # Symbol table
@@ -194,18 +194,18 @@ class SemanticAnalyzer:
         
         # Type promotions
         if self.type_promotions:
-            lines.append("\n⬆️  Type Promotions:")
+            lines.append("\n  Type Promotions:")
             for promo in self.type_promotions:
                 lines.append(f"  Line {promo['line']}: {promo['variable']} "
                            f"{promo['from_type']} → {promo['to_type']}")
         
         # Errors
         if self.errors:
-            lines.append(f"\n❌ Errors: {len(self.errors)}")
+            lines.append(f"\n Errors: {len(self.errors)}")
             for error in self.errors:
                 lines.append(f"  Line {error.get('line', '?')}: {error['message']}")
         else:
-            lines.append("\n✅ No errors found!")
+            lines.append("\n No errors found!")
         
         # Warnings
         if self.warnings:
@@ -253,8 +253,8 @@ if __name__ == "__main__":
         print(analyzer.generate_report())
         
         if success:
-            print("\n✅ Semantic analysis passed!")
+            print("\n Semantic analysis passed!")
         else:
-            print("\n❌ Semantic analysis failed!")
+            print("\n Semantic analysis failed!")
     else:
-        print("❌ Parsing failed!")
+        print(" Parsing failed!")

@@ -25,7 +25,7 @@ def compile_file(filepath, output=None, verbose=False):
         with open(filepath, 'r') as f:
             code = f.read()
     except FileNotFoundError:
-        print(f"❌ File not found: {filepath}")
+        print(f" File not found: {filepath}")
         return False
     
     if verbose:
@@ -50,7 +50,7 @@ def compile_file(filepath, output=None, verbose=False):
         ast = parser.parse()
         
         if not ast:
-            print("\n❌ Parse errors:")
+            print("\n Parse errors:")
             for err in parser.errors:
                 print(f"  {err.get('message', 'Unknown error')}")
             return False
@@ -61,7 +61,7 @@ def compile_file(filepath, output=None, verbose=False):
         # Phase 3: Semantic
         analyzer = SemanticAnalyzer()
         if not analyzer.analyze(ast):
-            print("\n❌ Semantic errors:")
+            print("\n Semantic errors:")
             for err in analyzer.errors:
                 print(f"  {err.get('message', 'Unknown error')}")
             return False
@@ -82,7 +82,7 @@ def compile_file(filepath, output=None, verbose=False):
         if output:
             with open(output, 'w') as f:
                 f.write(tac)
-            print(f"\n✅ TAC saved to: {output}")
+            print(f"\n TAC saved to: {output}")
         else:
             print("\nThree-Address Code:")
             print("-" * 60)
@@ -90,12 +90,12 @@ def compile_file(filepath, output=None, verbose=False):
             print("-" * 60)
         
         if verbose:
-            print(f"\n✅ Compilation successful!")
+            print(f"\n Compilation successful!")
         
         return True
     
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
         import traceback
         traceback.print_exc()
         return False

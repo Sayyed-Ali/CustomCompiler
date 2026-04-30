@@ -232,7 +232,7 @@ class Lexer:
         # Create token
         token = Token(token_type, id_str, start_line, start_col)
         
-        # ✅ CHECK SPELLING FOR EVERYTHING
+        #  CHECK SPELLING FOR EVERYTHING
         suggestion = self.spell_checker.check_keyword(id_str)
         if suggestion:
             token.spell_warning = suggestion
