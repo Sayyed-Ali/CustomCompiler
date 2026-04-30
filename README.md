@@ -1,180 +1,91 @@
 # Smart Compiler for Mini Programming Language
 
-A complete compiler implementation with ML-enhanced features for intelligent error detection and automatic type inference.
+A complete compiler implementation for a custom mini programming language, built from scratch in Python with machine learning-enhanced features for intelligent error detection and automatic type inference.
 
-## 🎯 Project Overview
+## Project Information
 
-This is an educational compiler built from scratch in Python that demonstrates all four phases of compilation while incorporating machine learning-inspired features to improve developer experience. Developed as part of the Compiler Design course (TCS-601) at Graphic Era University.
+**Course:** Compiler Design (TCS-601)
+**Team Name:** Code Sages
+**Team ID:** CD-VI-T079-2026
+**Institution:** Graphic Era University, Dehradun
+**Semester:** VI (2026)
 
-**Team:** Code Sages (CD-VI-T079-2026)  
-**Members:** Mohd Ali, Khushi Vaish, Divyanshu Yadav, Riya Deo
+## Team Members
 
-## ✨ Key Features
+| Name | Student ID | Role |
+|------|-----------|------|
+| Mohd Ali | 230112026 | Team Lead |
+| Khushi Vaish | 230221211 | Member |
+| Divyanshu Yadav | 230211545 | Member |
+| Riya Deo | 230121503 | Member |
 
-### Core Compilation Pipeline
-- **Phase 1: Lexical Analysis** - Tokenization with intelligent keyword spell checking
-- **Phase 2: Syntax Analysis** - Recursive descent parser with proper operator precedence
-- **Phase 3: Semantic Analysis** - Symbol table management with automatic type inference
-- **Phase 4: Code Generation** - Three-Address Code (TAC) output
+## Overview
 
-### ML-Powered Features
-1. **Intelligent Spell Correction** (Levenshtein Distance Algorithm)
-   - Detects keyword typos: `whiel` → suggests `while` with 60% confidence
-   - Uses edit distance calculation for smart suggestions
+This project implements a complete four-phase compiler for a custom mini programming language. The compiler processes source code through lexical analysis, syntax analysis, semantic analysis, and code generation phases, producing Three-Address Code (TAC) as output. Two machine learning-inspired features have been integrated to enhance the developer experience: intelligent keyword spell correction and automatic type inference.
 
-2. **Automatic Type Inference** (Constraint-based Propagation)
-   - No need for explicit type declarations
-   - Infers types from literals: `x = 5` → x is `int`
-   - Propagates through expressions: `z = x + y` where x:int, y:float → z:float
-   - Applies type promotion rules automatically
+## Features
 
-### User-Friendly Error Messages
-- Line and column numbers for all errors
-- Contextual suggestions for fixes
-- Color-coded output for better readability
+### Core Compilation Phases
 
-## 🚀 Quick Start
+1. **Lexical Analysis** - Converts source code into a stream of tokens with position tracking
+2. **Syntax Analysis** - Constructs an Abstract Syntax Tree using recursive descent parsing
+3. **Semantic Analysis** - Validates types, manages symbol table, and performs type inference
+4. **Code Generation** - Produces optimized Three-Address Code with temporary variables and labels
 
-### Prerequisites
-- Python 3.10 or higher
-- pip package manager
+### Machine Learning Features
 
-### Installation
-```bash
-# Clone the repository
-git clone https://gitlab.com/MohdAlii/custom-compiler.git
-cd custom-compiler
+1. **Intelligent Spell Correction**
+   - Uses Levenshtein Distance algorithm
+   - Detects keyword typos (e.g., "whiel" → "while", "printt" → "print")
+   - Provides confidence scoring for suggestions
+   - Threshold-based filtering to reduce false positives
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+2. **Automatic Type Inference**
+   - Constraint-based type propagation
+   - Eliminates need for explicit type declarations
+   - Handles type promotion rules (e.g., int + float → float)
+   - Supports literal type deduction
 
-# Install dependencies
-pip install -r requirements.txt
-```
+### User Interfaces
 
-### Running the Compiler
+- **Web Interface** - Interactive Streamlit-based UI for code compilation and visualization
+- **Command Line Interface** - Terminal-based compiler for batch processing
 
-#### Option 1: Web Interface (Recommended)
-```bash
-streamlit run ui/app.py
-```
-Then open your browser to `http://localhost:8501`
+## Language Syntax
 
-#### Option 2: Command Line
-```bash
-# Compile a single file
-python ui/cli.py examples/example1.txt
+### Supported Data Types
 
-# With output file
-python ui/cli.py examples/example1.txt -o output.tac
-```
-
-#### Option 3: Python API
-```python
-from src.lexer import Lexer
-from src.parser import Parser
-from src.semantic import SemanticAnalyzer
-from src.codegen import CodeGenerator
-
-# Your code
-code = """
-x = 5
-y = 10
-z = x + y
-print(z)
-"""
-
-# Compile
-lexer = Lexer(code)
-tokens = lexer.tokenize()
-
-parser = Parser(tokens)
-ast = parser.parse()
-
-analyzer = SemanticAnalyzer()
-analyzer.analyze(ast)
-
-codegen = CodeGenerator()
-tac = codegen.generate(ast)
-
-# View output
-print(codegen.get_code())
-```
-
-## 📂 Project Structure
-
-```
-mini-compiler/
-├── src/
-│   ├── lexer.py              # Tokenizer
-│   ├── parser.py             # Recursive descent parser
-│   ├── semantic.py           # Semantic analyzer
-│   ├── codegen.py            # TAC generator
-│   ├── spell_checker.py      # ML Feature #1
-│   ├── type_inference.py     # ML Feature #2
-│   ├── symbol_table.py       # Variable tracking
-│   ├── ast_nodes.py          # AST node definitions
-│   └── error_reporter.py     # Error formatting
-├── tests/
-│   ├── test_lexer.py         # 10 tests
-│   ├── test_parser.py        # 12 tests
-│   ├── test_semantic.py      # 12 tests
-│   └── test_codegen.py       # 10 tests
-├── ui/
-│   ├── app.py                # Streamlit web UI
-│   └── cli.py                # Command-line interface
-├── examples/
-│   ├── example1.txt          # Sample programs
-│   └── example2.txt
-├── requirements.txt          # Python dependencies
-└── README.md
-```
-
-## 🧪 Running Tests
-```bash
-# Run all tests
-pytest tests/
-
-# Run specific phase tests
-pytest tests/test_lexer.py
-pytest tests/test_parser.py
-pytest tests/test_semantic.py
-pytest tests/test_codegen.py
-
-# Run with verbose output
-pytest -v tests/
-```
-
-**Test Coverage:** 44/44 tests passing (100%)
-
-## 📖 Language Syntax
-
-### Supported Types
 - `int` - Integer numbers
 - `float` - Floating-point numbers
 - `string` - Text strings
-- `bool` - Boolean values (true/false)
+- `bool` - Boolean values
+
+### Supported Operations
+
+- Arithmetic: `+`, `-`, `*`, `/`, `%`
+- Comparison: `==`, `!=`, `<`, `<=`, `>`, `>=`
+- Logical: `&&`, `||`, `!`
+- Assignment: `=`
+
+### Control Structures
+
+- Conditional statements: `if-else`
+- Iterative statements: `while`
+- Output statements: `print`
 
 ### Example Program
-```python
-# Variables (type inference!)
+
+```
 x = 5
 y = 3.14
-name = "Alice"
-valid = true
+z = x + y
 
-# Arithmetic
-z = x + y * 2
-
-# Conditionals
-if (z > 10.0) {
+if (z > 5.0) {
     print(z)
 } else {
     print(0)
 }
 
-# Loops
 count = 0
 while (count < 3) {
     count = count + 1
@@ -182,99 +93,200 @@ while (count < 3) {
 }
 ```
 
-### Operators
-- Arithmetic: `+`, `-`, `*`, `/`, `%`
-- Comparison: `==`, `!=`, `<`, `<=`, `>`, `>=`
-- Logical: `&&`, `||`, `!`
-- Assignment: `=`
+## Project Structure
 
-## 🔬 Technical Details
+```
+mini-compiler/
+├── src/
+│   ├── lexer.py              Lexical analyzer
+│   ├── parser.py             Syntax analyzer
+│   ├── semantic.py           Semantic analyzer
+│   ├── codegen.py            Code generator
+│   ├── ast_nodes.py          AST node definitions
+│   ├── ast_visualizer.py     Tree visualization
+│   ├── spell_checker.py      ML Feature 1: Spell checking
+│   ├── type_inference.py     ML Feature 2: Type inference
+│   ├── symbol_table.py       Symbol table management
+│   └── error_reporter.py     Error formatting
+├── tests/
+│   ├── test_lexer.py         Lexer test suite
+│   ├── test_parser.py        Parser test suite
+│   ├── test_semantic.py      Semantic test suite
+│   └── test_codegen.py       Code generator test suite
+├── ui/
+│   ├── app.py                Streamlit web interface
+│   └── cli.py                Command line interface
+├── examples/
+│   ├── example1.txt          Sample program
+│   └── example2.txt          Sample program
+├── requirements.txt          Python dependencies
+└── README.md                 Project documentation
+```
 
-### Algorithms Used
+## Installation
 
-**Levenshtein Distance (Spell Checker)**
-- Dynamic programming approach
-- O(m×n) time complexity
-- Calculates minimum edit operations between strings
-- Used in Google Search, spell checkers, DNA sequencing
+### Prerequisites
 
-**Type Inference Engine**
-- Literal-based type deduction
-- Constraint propagation through AST
-- Type promotion rules (int → float)
-- Similar to TypeScript and Rust implementations
+- Python 3.10 or higher
+- pip package manager
 
-### Architecture
+### Setup
+
+Clone the repository:
+
+```
+git clone https://github.com/Sayyed-Ali/CustomCompiler.git
+cd CustomCompiler
+```
+
+Create and activate a virtual environment:
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+On Windows:
+
+```
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Running the Web Interface
+
+Launch the Streamlit-based web interface:
+
+```
+streamlit run ui/app.py
+```
+
+The application will open in your default browser at `http://localhost:8501`.
+
+### Running the Command Line Interface
+
+Compile a source file:
+
+```
+python ui/cli.py examples/example1.txt
+```
+
+Save Three-Address Code to a file:
+
+```
+python ui/cli.py examples/example1.txt -o output.tac
+```
+
+Enable verbose output:
+
+```
+python ui/cli.py examples/example1.txt -v
+```
+
+### Running Tests
+
+Execute all test suites:
+
+```
+pytest tests/
+```
+
+Run individual phase tests:
+
+```
+python tests/test_lexer.py
+python tests/test_parser.py
+python tests/test_semantic.py
+python tests/test_codegen.py
+```
+
+Run tests with verbose output:
+
+```
+pytest -v tests/
+```
+
+## Compilation Pipeline
+
 ```
 Source Code
-↓
-[Lexer] → Tokens
-↓
-[Parser] → Abstract Syntax Tree (AST)
-↓
-[Semantic Analyzer] → Validated AST + Symbol Table
-↓
-[Code Generator] → Three-Address Code (TAC)
+    |
+    v
+[Lexer] -> Token Stream
+    |
+    v
+[Parser] -> Abstract Syntax Tree
+    |
+    v
+[Semantic Analyzer] -> Validated AST + Symbol Table
+    |
+    v
+[Code Generator] -> Three-Address Code
 ```
 
-## 📊 Project Statistics
+## Technical Details
 
-- **Total Lines of Code:** ~1,800
-- **Test Cases:** 44 (100% passing)
-- **Phases Completed:** 4/4
-- **ML Features:** 2
-- **Development Time:** 6 weeks
-- **Team Size:** 4 members
+### Algorithms Implemented
 
-## 🎓 Educational Value
+1. **Levenshtein Distance** - Dynamic programming approach with O(m*n) time complexity for spell checking
+2. **Recursive Descent Parser** - Handles operator precedence through hierarchical function calls
+3. **Type Inference Engine** - Constraint-based propagation with promotion rules
+4. **Post-Order AST Traversal** - Used for code generation with temporary variable management
 
-This project demonstrates:
-- Complete compiler construction from scratch
-- Lexical analysis and tokenization
-- Context-free grammar parsing
-- Symbol table management
-- Type systems and inference
-- Intermediate code generation
-- Software testing best practices
-- Team collaboration and version control
+### Implementation Approach
 
-## 🤝 Contributing
+The compiler is implemented entirely from scratch in Python without using parser generators such as PLY or ANTLR. This design decision was made to provide deeper understanding of compiler construction principles and allow for full control over each phase.
 
-This is an academic project, but suggestions are welcome!
+## Testing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+The project includes 44 comprehensive test cases covering all compilation phases:
 
-## 📝 License
+| Phase | Test Count | Coverage |
+|-------|-----------|----------|
+| Lexer | 10 | Tokenization, operators, keywords, strings, comments, spell checker |
+| Parser | 12 | Expressions, precedence, parentheses, control flow, operators |
+| Semantic | 12 | Type inference, propagation, promotions, validation |
+| Code Generation | 10 | Assignments, expressions, control flow, complete programs |
+
+All 44 tests pass successfully.
+
+## Statistics
+
+- Total Lines of Code: Approximately 1,800
+- Number of Modules: 13
+- Test Cases: 44 (100% passing)
+- Compilation Phases: 4
+- Machine Learning Features: 2
+
+## Future Scope
+
+The following enhancements are planned for future iterations of this project:
+
+1. **Function Support** - Add user-defined functions with parameters and return values, including recursion support and proper scope management
+
+2. **Advanced Type System** - Implement arrays, dictionaries, and user-defined data structures with comprehensive type checking
+
+3. **Code Optimization** - Add intermediate code optimization techniques such as constant folding, dead code elimination, and common subexpression elimination
+
+## References
+
+1. Aho, A.V., Lam, M.S., Sethi, R., Ullman, J.D. (2006). *Compilers: Principles, Techniques, and Tools* (2nd Edition). Addison-Wesley.
+
+2. Levenshtein, V.I. (1966). Binary codes capable of correcting deletions, insertions, and reversals. *Soviet Physics Doklady*, 10(8), 707-710.
+
+3. Course materials and lectures from Compiler Design (TCS-601), Semester VI, Graphic Era University.
+
+## License
 
 This project is developed for educational purposes as part of the Compiler Design course at Graphic Era University.
 
-## 👥 Team
+## Contact
 
-**Team Code Sages - CD-VI-T079-2026**
-
-- **Mohd Ali** (Team Lead) - 230112026
-- **Khushi Vaish** - 230221211
-- **Divyanshu Yadav** - 230211545
-- **Riya Deo** - 23012503
-
-**Course:** Compiler Design (TCS-601)  
-**Semester:** VI (2026)  
-**Institution:** Graphic Era University
-
-## 📚 References
-
-- Aho, A.V., et al. - *Compilers: Principles, Techniques, and Tools* (Dragon Book)
-- Levenshtein, V.I. (1966) - Binary codes capable of correcting deletions
-- Course lectures and materials - Compiler Design, Semester VI
-
-## 🙏 Acknowledgments
-
-Special thanks to our course instructor and mentors for guidance throughout this project.
-
----
-
-**Status:** ✅ All 4 phases complete | 44/44 tests passing | Ready for deployment
+For questions or feedback regarding this project, please contact the team lead at qadriali54@gmail.com.
